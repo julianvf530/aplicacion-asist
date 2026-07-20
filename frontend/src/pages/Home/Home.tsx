@@ -1,19 +1,30 @@
 import MenuCard from "../../components/MenuCard";
+import { useNavigate } from "react-router-dom";
+
 
 export default function Home(){
+    let navigate = useNavigate();
     return (
         <div>
         <MenuCard
             title= "Registar ensayo"
-            click= {() => console.log("pulsado")}
-            />
-        <MenuCard title= "historial"
-        click= {() => console.log("pulsado")}
-            />
-        <MenuCard title= "Miembros" 
-        click= {() => console.log("pulsado")} />
-        <MenuCard title= "Estadisticas"
-        click= {() => console.log("pulsado")} />
+            click= {() => navigate("/attendance")}
+        />
+
+        <MenuCard 
+            title= "historial"
+            click= {() => navigate("/history")}
+        />
+
+        <MenuCard 
+            title= "Miembros" 
+            click= {() => navigate("/members")} 
+        />
+
+        <MenuCard 
+            title= "Estadisticas"
+            click= {() => navigate("/statistics")} 
+        />
         
         </div>
     );
