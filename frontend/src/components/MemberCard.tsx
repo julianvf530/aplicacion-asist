@@ -1,11 +1,12 @@
 import type { Member } from "../types/Member"
 
 type MemberCardProps= {
-   member:Member
-
+   member:Member;
+    onEdit: () => void;
+    onDelete: () => void;
 }
 
-export default function MemberCard({member}: MemberCardProps){
+export default function MemberCard({member,onEdit,onDelete } : MemberCardProps){
     
     return(
         <div>
@@ -13,6 +14,7 @@ export default function MemberCard({member}: MemberCardProps){
             <p>
                 {member.categoria} {member.instrumento}
             </p>
+            <button onClick ={onEdit} >Editar</button> - <button onClick ={onDelete}  >Eliminar</button>
         </div>
     )
 
