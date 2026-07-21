@@ -12,6 +12,7 @@ export default function Members(){
     const [text,setText] =useState("");
     const [editingMember,setEditingMember] = useState< Member | null>(null)
     const [membersList,setMembersList] = useState(members);
+    const [showForm,setShowForm] = useState(false);
 
     //funciones para manejar la aplicación
     const manejo = (event: ChangeEvent<HTMLInputElement>) => {
@@ -26,18 +27,36 @@ export default function Members(){
         setEditingMember(member)
     }
 
-    const handleSave = (updateMember:Member) => {
-        setMembersList((prevMembers) => 
+    const handleSave = (updatedMember:Member) => {
+        const exists= membersList.some(
+            (member)  => member.id === updatedMember.id
+        )
+
+        if(exists){
+
+            setMembersList((prevMembers) => 
             prevMembers.map((member) => 
-            member.id === updateMember.id
-            ?updateMember
+            member.id === updatedMember.id
+            ?updatedMember
             :member
-            )
-        );
+            ));
+
+        }else{
+            setMembersList((prevMembers)=> [
+             ...prevMembers,
+            updatedMember
+        ]);
+        }
+            
         setEditingMember(null);
+        setShowForm(false);
     }
+
     const handleDelete= (member:Member) => {
 
+        setMembersList((prevMembers)=>
+            prevMembers.filter((m) => m.id !== member.id) 
+        );
     }
 
     return (
@@ -51,11 +70,18 @@ export default function Members(){
                 onChange= {manejo}
             />
 
+            <button onClick={()=> setShowForm(true)}>
+                Añadir Miembro
+            </button>
+            
+            {showForm && (<MemberForm onSave={handleSave} />)}
+
+
             {editingMember && (
                 <MemberForm 
                 member={editingMember}
                 onSave={handleSave}/>
-             )}
+            )}
             
 
             {filteredMembers.map((member) =>
