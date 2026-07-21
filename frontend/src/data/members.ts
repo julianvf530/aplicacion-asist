@@ -5,28 +5,28 @@ export const members: Member[] = [
     {
         id:1,
         nombre: "juan",
-        categoria: "1º",
+        categoria: "1",
         instrumento: "Trompeta",
 
     },
     {
         id:2,
         nombre: "Antonio",
-        categoria: "2º",
+        categoria: "2",
         instrumento: "Clarinete",
 
     },
     {
         id:3,
         nombre: "alberto",
-        categoria: "3º",
+        categoria: "3",
         instrumento: "Flauta",
 
     },
     {
         id:4,
         nombre: "Cristo",
-        categoria: "1º",
+        categoria: "E",
         instrumento: "tambor",
 
     }

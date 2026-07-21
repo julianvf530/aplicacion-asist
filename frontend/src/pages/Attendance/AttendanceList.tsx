@@ -5,9 +5,10 @@ import type { Member } from "../../types/Member";
 type AttendanceListProps= {
     members: Member[];
     attendanceMembers: AttendanceMember[];
+    onToggle: (memberId:number) => void 
 }
 
-export default function AttendanceList ({members,attendanceMembers}: AttendanceListProps ) {
+export default function AttendanceList ({members,attendanceMembers,onToggle}: AttendanceListProps ) {
     
     return(
         <div>
@@ -27,7 +28,7 @@ export default function AttendanceList ({members,attendanceMembers}: AttendanceL
                     key={member.id}
                     member={member}
                     attendance={attendance!}
-                    onToggle={() => {}}
+                    onToggle={onToggle}
                 />
             );
 

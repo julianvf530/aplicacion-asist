@@ -4,7 +4,7 @@ import type { AttendanceMember } from "../../types/AttendanceMember";
 type attendanceMemberCardProps = {
     member:Member,
     attendance: AttendanceMember,
-    onToggle : () => void
+    onToggle : (memberId:number) => void
 }
 
 export default function AttendanceMemberCard ({member,attendance,onToggle} : attendanceMemberCardProps) {
@@ -20,7 +20,7 @@ export default function AttendanceMemberCard ({member,attendance,onToggle} : att
                 {member.categoria} - {member.instrumento}
             </p>
 
-            <button onClick={onToggle}>
+            <button onClick={() => onToggle(member.id)}>
                 {attendance.presente ? "Presente" : "Ausente"}
             </button>
 
