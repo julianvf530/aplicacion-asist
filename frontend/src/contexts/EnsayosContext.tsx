@@ -5,6 +5,7 @@ import type { Ensayo } from "../types/Ensayo";
 type EnsayosContextType = {
     ensayos: Ensayo[];
     addEnsayo: (ensayo: Ensayo) => void;
+    deleteEnsayo: (id:number) => void;
 }
 
 const EnsayosContext = createContext<EnsayosContextType | null>(null);
@@ -23,12 +24,21 @@ export function EnsayosProvider({children}: {children: ReactNode}) {
 
     };
 
+    const deleteEnsayo = (id:number) => {
+        setEnsayos((prev) =>
+            prev.filter(
+                (ensayo) => ensayo.id !== id
+            )
+        )
+    }
+
 
     return (
         <EnsayosContext.Provider
             value={{
                 ensayos,
-                addEnsayo
+                addEnsayo,
+                deleteEnsayo
             }}
         >
             {children}
