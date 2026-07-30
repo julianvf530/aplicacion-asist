@@ -1,71 +1,229 @@
 import { useState } from "react";
 
-type attendanceSetupProps={
-    onStart: (date: string, type: "Ensayo" | "Evento")=> void
-}
+import Card from "../../components/ui/Card";
+import Input from "../../components/ui/Input";
+import Button from "../../components/ui/Button";
 
-export default function AttendanceSetup ({onStart}: attendanceSetupProps) {
-    
-    // Estados
-    const [date, setDate] = useState(
-        new Date().toISOString().split("T")[0]
+
+type AttendanceSetupProps = {
+
+    onStart: (
+        date:string,
+        type:"Ensayo" | "Evento"
+    ) => void;
+
+};
+
+
+
+export default function AttendanceSetup({
+
+    onStart
+
+}: AttendanceSetupProps) {
+
+
+    const [date,setDate] = useState(
+
+        new Date()
+            .toISOString()
+            .split("T")[0]
+
     );
 
-    const [type, setType] = useState<"Ensayo" | "Evento">("Ensayo");
 
-    // Función para comenzar el ensayo
+    const [type,setType] = useState<
+        "Ensayo" | "Evento"
+    >("Ensayo");
+
+
+
     const handleStart = () => {
-        onStart(date, type);
+
+        onStart(date,type);
+
     };
 
+
+
     return (
-        <div>
-            <h2>Preparar ensayo</h2>
 
-            <div>
-                <label>Fecha</label>
-                <br />
+        <Card
+            className="
+                max-w-xl
+            "
+        >
 
-                <input
-                    type="date"
-                    value={date}
-                    onChange={(e) => setDate(e.target.value)}
-                />
-            </div>
 
-            <br />
+            <h2
+                className="
+                    text-xl
+                    font-bold
+                    mb-6
+                "
+            >
 
-            <div>
-                <label>Tipo</label>
+                Preparar ensayo
+
+            </h2>
+
+
+
+            <div
+                className="
+                    flex
+                    flex-col
+                    gap-5
+                "
+            >
+
+
 
                 <div>
-                    <label>
-                        <input
-                            type="radio"
-                            checked={type === "Ensayo"}
-                            onChange={() => setType("Ensayo")}
-                        />
-                        Ensayo
+
+
+                    <label
+                        className="
+                            block
+                            mb-2
+                            font-medium
+                        "
+                    >
+
+                        Fecha
+
                     </label>
+
+
+                    <Input
+
+                        type="date"
+
+                        value={date}
+
+                        onChange={(e)=>
+                            setDate(e.target.value)
+                        }
+
+                    />
+
+
                 </div>
+
+
+
 
                 <div>
-                    <label>
-                        <input
-                            type="radio"
-                            checked={type === "Evento"}
-                            onChange={() => setType("Evento")}
-                        />
-                        Evento especial
+
+
+                    <label
+                        className="
+                            block
+                            mb-2
+                            font-medium
+                        "
+                    >
+
+                        Tipo
+
                     </label>
+
+
+
+                    <div
+                        className="
+                            flex
+                            gap-6
+                        "
+                    >
+
+
+
+                        <label
+                            className="
+                                flex
+                                items-center
+                                gap-2
+                            "
+                        >
+
+                            <input
+
+                                type="radio"
+
+                                checked={
+                                    type === "Ensayo"
+                                }
+
+                                onChange={() =>
+                                    setType("Ensayo")
+                                }
+
+                            />
+
+
+                            Ensayo
+
+
+                        </label>
+
+
+
+
+                        <label
+                            className="
+                                flex
+                                items-center
+                                gap-2
+                            "
+                        >
+
+
+                            <input
+
+                                type="radio"
+
+                                checked={
+                                    type === "Evento"
+                                }
+
+                                onChange={() =>
+                                    setType("Evento")
+                                }
+
+                            />
+
+
+                            Evento especial
+
+
+                        </label>
+
+
+                    </div>
+
+
                 </div>
+
+
+
+                <Button
+
+                    onClick={handleStart}
+
+                >
+
+                    Comenzar ensayo
+
+                </Button>
+
+
+
             </div>
 
-            <br />
 
-            <button onClick={handleStart}>
-                Comenzar ensayo
-            </button>
-        </div>
+        </Card>
+
     );
+
 }

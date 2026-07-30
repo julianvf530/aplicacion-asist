@@ -1,0 +1,22 @@
+CREATE TABLE IF NOT EXISTS members (
+    id INTEGER PRIMARY KEY AUTOINCREMENT, 
+    nombre TEXT NOT NULL,
+    categoria TEXT NOT NULL,
+    instrumento TEXT NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS ensayos(
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    fecha TEXT NOT NULL,
+    tipo TEXT NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS asistencia(
+    ensayo_id INTEGER NOT NULL,
+    member_id INTEGER NOT NULL,
+    presente INTEGER NOT NULL, 
+
+    FOREIGN KEY(ensayo_id) REFERENCES ensayos(id) ON DELETE CASCADE,
+    FOREIGN KEY(member_id) REFERENCES members(id) ON DELETE CASCADE 
+
+);

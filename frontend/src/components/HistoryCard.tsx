@@ -1,84 +1,242 @@
-import type { Ensayo } from "../types/Ensayo"
-import type { AttendanceMember } from "../types/AttendanceMember"
-import { useState } from "react"
-import { members } from "../data/members"
-import { useEnsayos } from "../contexts/EnsayosContext"
+import type { Ensayo } from "../types/Ensayo";
+import type { AttendanceMember } from "../types/AttendanceMember";
+
+import { useState } from "react";
+
+import { useMembers } from "../hooks/useMembers";
+
+import Card from "./ui/Card";
+import Button from "./ui/Button";
 
 
-type historyCardProps = {
-    ensayo:Ensayo
-}
+type HistoryCardProps = {
 
-export default function HistoryCard({ensayo}: historyCardProps) {
-    const [showDetails, setShowDetails] =useState(false);
-    
-    const {deleteEnsayo} = useEnsayos();
+    ensayo: Ensayo;
 
-    const presentes = 
-        ensayo.asistencia.filter(
-            (attendance:AttendanceMember) => attendance.presente
-        )
-    const ausentes = 
-        ensayo.asistencia.filter(
-            (attendance:AttendanceMember) => !attendance.presente
-        )
+    onDelete: (id:number)=>Promise<void>;
 
-    
-    const getMemberName = (memberId:number) => {
+};
+
+
+
+export default function HistoryCard({
+
+    ensayo,
+
+    onDelete
+
+}: HistoryCardProps) {
+
+
+    const [showDetails,setShowDetails] =
+        useState(false);
+
+
+    const { members } = useMembers();
+
+
+
+    const presentes =
+        ensayo.asistencia?.filter(
+            (attendance:AttendanceMember)=>
+                attendance.presente
+        ) ?? [];
+
+
+
+    const ausentes =
+        ensayo.asistencia?.filter(
+            (attendance:AttendanceMember)=>
+                !attendance.presente
+        ) ?? [];
+
+
+
+    const getMemberName = (memberId:number)=>{
+
+
         const member = members.find(
-            (member) => member.id === memberId
-        )
-
-        return member?.nombre ?? "deconocido"
-    }
+            (member)=>member.id === memberId
+        );
 
 
-    return(
-        <div>
-            <h2>{ensayo.fecha}</h2>
+        return member?.nombre ?? "Desconocido";
 
-            <p>{ensayo.tipo}</p>
-
-            <p>Presentes: {presentes.length}</p>
-
-            <p>Ausentes: {ausentes.length}</p>
-
-            <button onClick={ () => setShowDetails(!showDetails)}>
-                
-                {showDetails ? "ocultar asistencia" : "ver asistencia"}
-            
-            </button>
-            
-            <button onClick={() => deleteEnsayo(ensayo.id)}>
-
-             Eliminar
-            
-            </button>
+    };
 
 
-                {
-                    showDetails && ( 
 
-                        ensayo.asistencia.map((attendance) => (
+    return (
 
-                            <p key={attendance.memberId}>
+        <Card
+            className="
+                mb-5
+            "
+        >
 
-                                {getMemberName(attendance.memberId)}
 
-                                {
-                                    attendance.presente
-                                    ? " ✅"
-                                    : " ❌"
-                                }
+            <div
+                className="
+                    flex
+                    justify-between
+                    items-start
+                "
+            >
 
-                            </p>
 
-                        ))
-                    )
+                <div>
+
+                    <h2
+                        className="
+                            text-xl
+                            font-bold
+                        "
+                    >
+
+                        {ensayo.fecha}
+
+                    </h2>
+
+
+                    <p className="text-gray-600">
+
+                        {ensayo.tipo}
+
+                    </p>
+
+
+                </div>
+
+
+                <Button
+
+                    variant="danger"
+
+                    onClick={() => onDelete(ensayo.id)}
+
+                >
+
+                    Eliminar
+
+                </Button>
+
+
+            </div>
+
+
+
+            <div
+                className="
+                    flex
+                    gap-6
+                    mt-4
+                "
+            >
+
+                <p
+                    className="
+                        text-green-600
+                        font-medium
+                    "
+                >
+
+                    ✅ Presentes: {presentes.length}
+
+                </p>
+
+
+
+                <p
+                    className="
+                        text-red-600
+                        font-medium
+                    "
+                >
+
+                    ❌ Ausentes: {ausentes.length}
+
+                </p>
+
+
+            </div>
+
+
+
+            <Button
+
+                variant="secondary"
+
+                className="mt-4"
+
+                onClick={() =>
+                    setShowDetails(!showDetails)
                 }
 
+            >
 
-        </div>
-    )
+                {
+                    showDetails
+                    ? "Ocultar asistencia"
+                    : "Ver asistencia"
+                }
+
+            </Button>
+
+
+
+            {
+                showDetails && (
+
+                    <div
+                        className="
+                            mt-5
+                            border-t
+                            pt-4
+                        "
+                    >
+
+                        {
+                            ensayo.asistencia?.map(
+                                (attendance)=>(
+
+
+                                <p
+                                    key={attendance.memberId}
+                                    className="
+                                        py-1
+                                    "
+                                >
+
+                                    {
+                                        getMemberName(
+                                            attendance.memberId
+                                        )
+                                    }
+
+
+                                    {
+                                        attendance.presente
+                                        ? " ✅"
+                                        : " ❌"
+                                    }
+
+
+                                </p>
+
+
+                            ))
+                        }
+
+
+                    </div>
+
+                )
+            }
+
+
+
+        </Card>
+
+    );
 
 }

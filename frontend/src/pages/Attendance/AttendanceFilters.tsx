@@ -1,27 +1,82 @@
-type attendanceFiltersProps = {
-    selectedCategory : string;
-    onSelectCategory: (category:string) => void;
-}
+import Button from "../../components/ui/Button";
 
-export default function AttendanceFilters({selectedCategory,onSelectCategory}: attendanceFiltersProps)  {
-    
+
+type AttendanceFiltersProps = {
+
+    selectedCategory:string;
+
+    onSelectCategory:(category:string)=>void;
+
+};
+
+
+
+export default function AttendanceFilters({
+
+    selectedCategory,
+
+    onSelectCategory
+
+}:AttendanceFiltersProps){
+
+
     const categories = [
-            "Todas","1","2","3","4","R","E"
-        ];
+        "Todas",
+        "1",
+        "2",
+        "3",
+        "4",
+        "R",
+        "E"
+    ];
+
+
 
     return (
-        <div>
-            {categories.map((category)=>(
-                <button
-                    key={category}
-                    onClick = { () => onSelectCategory(category)}
-                    >
-                    {category}</button>
-                    
-            ))}
-        </div>    
 
+        <div
+            className="
+                flex
+                gap-2
+                flex-wrap
+                mb-6
+            "
+        >
+
+
+        {
+            categories.map((category)=>(
+
+
+                <Button
+
+                    key={category}
+
+                    variant={
+                        selectedCategory === category
+                        ? "primary"
+                        : "secondary"
+                    }
+
+                    onClick={() =>
+                        onSelectCategory(category)
+                    }
+
+                >
+
+                    {category}
+
+
+                </Button>
+
+
+            ))
+        }
+
+
+        </div>
 
 
     );
+
 }

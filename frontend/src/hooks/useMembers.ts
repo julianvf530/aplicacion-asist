@@ -1,0 +1,95 @@
+import { useEffect, useState } from "react";
+
+import type { Member } from "../types/Member";
+
+import {
+    getMembers,
+    createMember,
+    updateMember as updateMemberApi,
+    deleteMember as deleteMemberApi
+} from "../api/membersApi";
+
+
+export function useMembers(){
+
+    const [members,setMembers] = useState<Member[]>([]);
+
+
+    async function loadMembers(){
+
+        const data = await getMembers();
+
+        setMembers(data);
+
+    }
+
+
+    useEffect(()=>{
+
+        loadMembers();
+
+    },[]);
+
+
+    async function addMember(member:Omit<Member,"id">){
+
+        const newMember = await createMember(member);
+
+        setMembers(prev => [...prev,newMember]);
+
+    }
+
+
+    async function updateMember(member:Member){
+
+        const updated = await updateMemberApi(member);
+
+        setMembers(prev =>
+
+            prev.map(m =>
+
+                m.id === updated.id
+
+                    ? updated
+
+                    : m
+
+            )
+
+        );
+
+    }
+
+
+    async function deleteMember(id:number){
+
+        await deleteMemberApi(id);
+
+        setMembers(prev =>
+
+            prev.filter(
+
+                member => member.id !== id
+
+            )
+
+        );
+
+    }
+
+
+    return{
+
+        members,
+
+        addMember,
+
+        updateMember,
+
+        deleteMember,
+
+        loadMembers
+
+    };
+
+}

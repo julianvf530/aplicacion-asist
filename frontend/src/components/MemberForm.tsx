@@ -1,59 +1,345 @@
-import type { Member } from "../types/Member";
 import { useState } from "react";
 
+import type { Member } from "../types/Member";
+
+import Card from "./ui/Card";
+import Input from "./ui/Input";
+import Button from "./ui/Button";
 
 type MemberFormProps = {
     member?: Member;
     onSave: (member: Member) => void;
+    onCancel?: () => void;
 };
 
-export default function MemberForm({ member,onSave }: MemberFormProps) {
-    //estados 
-    const [nombre,setNombre] = useState(member?.nombre ?? "");
-    const [categoria,setCategoria] = useState(member?.categoria ?? "");
-    const [instrumento,setInstrumento] = useState(member?.instrumento ?? "");
+export default function MemberForm({
+    member,
+    onSave,
+    onCancel
+}: MemberFormProps) {
+
+    const [nombre, setNombre] = useState(member?.nombre ?? "");
+
+    const [categoria, setCategoria] = useState(
+        member?.categoria ?? ""
+    );
+
+    const [instrumento, setInstrumento] = useState(
+        member?.instrumento ?? ""
+    );
+
+    const [nombreError, setNombreError] = useState("");
+
+    const [categoriaError, setCategoriaError] = useState("");
+
+    const [instrumentoError, setInstrumentoError] = useState("");
 
     const handleSubmit = () => {
-        const updateMember:Member = {
-            
-            id: member ? member.id: Date.now(),
-            nombre,
-            categoria,
-            instrumento
+
+        let valid = true;
+
+        setNombreError("");
+        setCategoriaError("");
+        setInstrumentoError("");
+
+        if (nombre.trim() === "") {
+
+            setNombreError("El nombre es obligatorio");
+
+            valid = false;
+
         }
-        onSave(updateMember)
-    }
+
+        if (categoria === "") {
+
+            setCategoriaError("Selecciona una categoría");
+
+            valid = false;
+
+        }
+
+        if (instrumento === "") {
+
+            setInstrumentoError("Selecciona un instrumento");
+
+            valid = false;
+
+        }
+
+        if (!valid) {
+            return;
+        }
+
+        const updatedMember: Member = {
+
+            id: member
+                ? member.id
+                : Date.now(),
+
+            nombre,
+
+            categoria,
+
+            instrumento
+
+        };
+
+        onSave(updatedMember);
+
+    };
 
     return (
-        <div>
-            <h2>
-                {member ? "Editar miembro" : "Añadir miembro"}
+
+        <Card
+            className="
+                max-w-xl
+                mb-6
+            "
+        >
+
+            <h2
+                className="
+                    text-2xl
+                    font-bold
+                    mb-6
+                "
+            >
+
+                {
+                    member
+                        ? "Editar miembro"
+                        : "Añadir miembro"
+                }
+
             </h2>
 
-            <input
-                type="text"
-                placeholder="Nombre"
-                value={nombre}
-                onChange={(e) => setNombre(e.target.value)}
-            />
+            <div
+                className="
+                    flex
+                    flex-col
+                    gap-5
+                "
+            >
 
-            <input
-                type="text"
-                placeholder="Categoría"
-                value={categoria}
-                onChange={(e) => setCategoria(e.target.value)}
-            />
+                <div>
 
-            <input
-                type="text"
-                placeholder="Instrumento"
-                value={instrumento}
-                onChange={(e) => setInstrumento(e.target.value)}
-            />
+                    <label
+                        className="
+                            block
+                            text-sm
+                            font-medium
+                            mb-2
+                        "
+                    >
+                        Nombre
+                    </label>
 
-            <button onClick={handleSubmit}>
-                Guardar
-            </button>
-        </div>
+                    <Input
+                        type="text"
+                        placeholder="Nombre del miembro"
+                        value={nombre}
+                        onChange={(e) =>
+                            setNombre(e.target.value)
+                        }
+                    />
+                    {nombreError && (
+
+                        <p className="text-red-500 text-sm mt-1">
+                            {nombreError}
+                        </p>
+
+                    )}
+
+                </div>
+
+                <div>
+
+                    <label
+                        className="
+                            block
+                            text-sm
+                            font-medium
+                            mb-2
+                        "
+                    >
+                        Categoría
+                    </label>
+
+                    <select
+                        value={categoria}
+                        onChange={(e) =>
+                            setCategoria(e.target.value)
+                        }
+                        className="
+                            w-full
+                            border
+                            border-gray-300
+                            rounded-lg
+                            px-3
+                            py-2
+                            focus:outline-none
+                            focus:ring-2
+                            focus:ring-blue-500
+                        "
+                    >
+
+                        <option value="">
+                            Selecciona una categoría
+                        </option>
+
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                        <option value="4">4</option>
+                        <option value="R">R</option>
+                        <option value="E">E</option>
+
+                    </select>
+                    {categoriaError && (
+
+                        <p className="text-red-500 text-sm mt-1">
+                            {categoriaError}
+                        </p>
+
+                    )}
+
+                </div>
+
+                <div>
+
+                    <label
+                        className="
+                            block
+                            text-sm
+                            font-medium
+                            mb-2
+                        "
+                    >
+                        Instrumento
+                    </label>
+
+                    <select
+                        value={instrumento}
+                        onChange={(e) =>
+                            setInstrumento(e.target.value)
+                        }
+                        className="
+                            w-full
+                            border
+                            border-gray-300
+                            rounded-lg
+                            px-3
+                            py-2
+                            focus:outline-none
+                            focus:ring-2
+                            focus:ring-blue-500
+                        "
+                    >
+
+                        <option value="">
+                            Selecciona un instrumento
+                        </option>
+
+                        <option value="Clarinete">
+                            Clarinete
+                        </option>
+
+                        <option value="Flauta">
+                            Flauta
+                        </option>
+
+                        <option value="Oboe">
+                            Oboe
+                        </option>
+
+                        <option value="Fagot">
+                            Fagot
+                        </option>
+
+                        <option value="Saxo Alto">
+                            Saxo Alto
+                        </option>
+
+                        <option value="Saxo Tenor">
+                            Saxo Tenor
+                        </option>
+
+                        <option value="Saxo Barítono">
+                            Saxo Barítono
+                        </option>
+
+                        <option value="Trompeta">
+                            Trompeta
+                        </option>
+
+                        <option value="Trompa">
+                            Trompa
+                        </option>
+
+                        <option value="Trombón">
+                            Trombón
+                        </option>
+
+                        <option value="Bombardino">
+                            Bombardino
+                        </option>
+
+                        <option value="Tuba">
+                            Tuba
+                        </option>
+
+                        <option value="Percusión">
+                            Percusión
+                        </option>
+
+                    </select>
+
+                    {instrumentoError && (
+
+                        <p className="text-red-500 text-sm mt-1">
+                            {instrumentoError}
+                        </p>
+
+                    )}
+
+                </div>
+
+                <div
+                    className="
+                        flex
+                        justify-end
+                        gap-3
+                        pt-2
+                    "
+                >
+
+                    {
+                        onCancel && (
+
+                            <Button
+                                variant="secondary"
+                                onClick={onCancel}
+                            >
+                                Cancelar
+                            </Button>
+
+                        )
+                    }
+
+                    <Button
+                        onClick={handleSubmit}
+                    >
+
+                        Guardar
+
+                    </Button>
+
+                </div>
+
+            </div>
+
+        </Card>
+
     );
+
 }

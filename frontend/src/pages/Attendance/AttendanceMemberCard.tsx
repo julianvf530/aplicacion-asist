@@ -1,31 +1,93 @@
 import type { Member } from "../../types/Member";
 import type { AttendanceMember } from "../../types/AttendanceMember";
 
-type attendanceMemberCardProps = {
-    member:Member,
-    attendance: AttendanceMember,
-    onToggle : (memberId:number) => void
-}
+import Card from "../../components/ui/Card";
+import Button from "../../components/ui/Button";
 
-export default function AttendanceMemberCard ({member,attendance,onToggle} : attendanceMemberCardProps) {
-    
-    return(
 
-        <div>
-            <h3>
+type AttendanceMemberCardProps = {
+
+    member:Member;
+
+    attendance:AttendanceMember;
+
+    onToggle:(memberId:number)=>void;
+
+};
+
+
+
+export default function AttendanceMemberCard({
+
+    member,
+
+    attendance,
+
+    onToggle
+
+}:AttendanceMemberCardProps){
+
+
+    return (
+
+        <Card>
+
+
+            <h3
+                className="
+                    text-lg
+                    font-bold
+                "
+            >
+
                 {member.nombre}
+
             </h3>
 
-            <p>
-                {member.categoria} - {member.instrumento}
+
+
+            <p
+                className="
+                    text-gray-600
+                    mb-4
+                "
+            >
+
+                {member.categoria}
+                {" · "}
+                {member.instrumento}
+
+
             </p>
 
-            <button onClick={() => onToggle(member.id)}>
-                {attendance.presente ? "Presente" : "Ausente"}
-            </button>
 
-        </div>
 
-    )
+            <Button
+
+                variant={
+                    attendance.presente
+                    ? "primary"
+                    : "danger"
+                }
+
+                onClick={() =>
+                    onToggle(member.id)
+                }
+
+            >
+
+                {
+                    attendance.presente
+                    ? "✅ Presente"
+                    : "❌ Ausente"
+                }
+
+
+            </Button>
+
+
+        </Card>
+
+    );
 
 }

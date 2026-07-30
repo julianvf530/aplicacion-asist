@@ -1,61 +1,221 @@
-import { useEnsayos } from "../../contexts/EnsayosContext";
+import { useStatistics } from "../../hooks/useStatistics";
 
-export default function Statistics(){
+import PageContainer from "../../components/ui/PageContainer";
+import Card from "../../components/ui/Card";
 
-    const { ensayos } = useEnsayos();
+export default function Statistics() {
+
+    const { statistics } = useStatistics();
 
 
-    // Calculamos asistentes por ensayo
-    const totalAsistencias = ensayos.map((ensayo) => {
+    if (!statistics) {
 
-        const presentes = ensayo.asistencia.filter(
-            (attendance) => attendance.presente
+        return (
+
+            <PageContainer>
+
+                <h1
+                    className="
+                        text-3xl
+                        font-bold
+                        mb-6
+                    "
+                >
+                    Estadísticas
+                </h1>
+
+                <p>Cargando estadísticas...</p>
+
+            </PageContainer>
+
         );
 
-        return presentes.length;
-
-    });
-
-
-    // Calculamos la media de asistencia
-    const mediaAsistencia = totalAsistencias.length > 0
-        ? totalAsistencias.reduce(
-            (total, actual) => total + actual,
-            0
-        ) / totalAsistencias.length
-        : 0;
+    }
 
 
     return (
-        <div>
 
-            <h1>Estadísticas</h1>
+        <PageContainer>
 
-
-            <p>
-                Ensayos realizados: {ensayos.length}
-            </p>
-
-
-            <p>
-                Media de asistentes por ensayo:
-                {mediaAsistencia.toFixed(2)}
-            </p>
+            <h1
+                className="
+                    text-3xl
+                    font-bold
+                    mb-8
+                "
+            >
+                Estadísticas
+            </h1>
 
 
-            <h2>Asistencia por ensayo</h2>
+            <div
+                className="
+                    grid
+                    grid-cols-1
+                    md:grid-cols-2
+                    xl:grid-cols-3
+                    gap-6
+                "
+            >
 
-            {
-                totalAsistencias.map((total, index) => (
+                <Card>
 
-                    <p key={index}>
-                        Ensayo {index + 1}: {total} asistentes
+                    <p className="text-gray-500">
+                        📅 Ensayos realizados
                     </p>
 
-                ))
-            }
+                    <p className="text-4xl font-bold mt-2">
+                        {statistics.ensayosRealizados}
+                    </p>
+
+                </Card>
 
 
-        </div>
+                <Card>
+
+                    <p className="text-gray-500">
+                        ✅ Asistencias
+                    </p>
+
+                    <p
+                        className="
+                            text-4xl
+                            font-bold
+                            text-green-600
+                            mt-2
+                        "
+                    >
+                        {statistics.totalAsistencias}
+                    </p>
+
+                </Card>
+
+
+                <Card>
+
+                    <p className="text-gray-500">
+                        ❌ Ausencias
+                    </p>
+
+                    <p
+                        className="
+                            text-4xl
+                            font-bold
+                            text-red-600
+                            mt-2
+                        "
+                    >
+                        {statistics.totalAusencias}
+                    </p>
+
+                </Card>
+
+
+                <Card>
+
+                    <p className="text-gray-500">
+                        📊 Asistencia media
+                    </p>
+
+                    <p
+                        className="
+                            text-4xl
+                            font-bold
+                            text-blue-600
+                            mt-2
+                        "
+                    >
+                        {statistics.porcentajeAsistencia}%
+                    </p>
+
+                </Card>
+
+
+                <Card>
+
+                    <p className="text-gray-500">
+                        🥇 Más asistencias
+                    </p>
+
+                    {
+
+                        statistics.mejorAsistencia ? (
+
+                            <>
+
+                                <p
+                                    className="
+                                        text-xl
+                                        font-bold
+                                        mt-2
+                                    "
+                                >
+                                    {statistics.mejorAsistencia.nombre}
+                                </p>
+
+                                <p className="text-gray-600">
+                                    {statistics.mejorAsistencia.total} asistencias
+                                </p>
+
+                            </>
+
+                        ) : (
+
+                            <p className="mt-2">
+                                Sin datos
+                            </p>
+
+                        )
+
+                    }
+
+                </Card>
+
+
+                <Card>
+
+                    <p className="text-gray-500">
+                        🚫 Más ausencias
+                    </p>
+
+                    {
+
+                        statistics.masAusencias ? (
+
+                            <>
+
+                                <p
+                                    className="
+                                        text-xl
+                                        font-bold
+                                        mt-2
+                                    "
+                                >
+                                    {statistics.masAusencias.nombre}
+                                </p>
+
+                                <p className="text-gray-600">
+                                    {statistics.masAusencias.total} ausencias
+                                </p>
+
+                            </>
+
+                        ) : (
+
+                            <p className="mt-2">
+                                Sin datos
+                            </p>
+
+                        )
+
+                    }
+
+                </Card>
+
+            </div>
+
+        </PageContainer>
+
     );
+
 }
