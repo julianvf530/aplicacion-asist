@@ -1,56 +1,70 @@
 const db = require("../database/db");
 
 
-function getAllMembers(){
+function getAllMembers() {
 
-    return db 
-    .prepare("SELECT * FROM members"
-
-    ).all();
+    return db
+        .prepare(`
+            SELECT *
+            FROM members
+            ORDER BY numero
+        `)
+        .all();
 
 }
 
-function createMember(member){
-    const result= db
+
+function createMember(member) {
+
+    const result = db
         .prepare(`
             INSERT INTO members
-            (nombre,categoria,instrumento)
-            VALUES (?,?,?) 
-            `)
+            (numero, nombre, categoria, instrumento)
+            VALUES (?, ?, ?, ?)
+        `)
         .run(
+            member.numero,
             member.nombre,
             member.categoria,
             member.instrumento
-        )
+        );
+
     return {
-        id:result.lastInsertRowid,
+        id: result.lastInsertRowid,
         ...member
-    }
+    };
+
 }
 
-function updateMember(id,member){
+
+function updateMember(id, member) {
+
     db.prepare(`
-        UPDATE members 
-        SET nombre=?,
-            categoria=?,
-            instrumento=?,
-        WHERE id= ?
-        `)
-        .run(
-            member.nombre,
-            member.categoria,
-            member.instrumento,
-            id  
-        )
+        UPDATE members
+        SET
+            numero = ?,
+            nombre = ?,
+            categoria = ?,
+            instrumento = ?
+        WHERE id = ?
+    `)
+    .run(
+        member.numero,
+        member.nombre,
+        member.categoria,
+        member.instrumento,
+        id
+    );
 
-        return {
-            id,
-            ...member
-        }
+    return {
+        id,
+        ...member
+    };
 
 }
 
-function deleteMember(id){
+
+function deleteMember(id) {
 
     db.prepare(`
         DELETE FROM asistencia
@@ -68,6 +82,6 @@ function deleteMember(id){
 module.exports = {
     getAllMembers,
     createMember,
-    deleteMember,
-    updateMember
+    updateMember,
+    deleteMember
 };

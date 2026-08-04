@@ -10,12 +10,12 @@ import {
 } from "../api/membersApi";
 
 
-export function useMembers(){
+export function useMembers() {
 
-    const [members,setMembers] = useState<Member[]>([]);
+    const [members, setMembers] = useState<Member[]>([]);
 
 
-    async function loadMembers(){
+    async function loadMembers() {
 
         const data = await getMembers();
 
@@ -24,44 +24,52 @@ export function useMembers(){
     }
 
 
-    useEffect(()=>{
+    useEffect(() => {
 
         loadMembers();
 
-    },[]);
+    }, []);
 
 
-    async function addMember(member:Omit<Member,"id">){
+    async function addMember(member: Omit<Member, "id">) {
 
         const newMember = await createMember(member);
 
-        setMembers(prev => [...prev,newMember]);
-
-    }
-
-
-    async function updateMember(member:Member){
-
-        const updated = await updateMemberApi(member);
-
         setMembers(prev =>
 
-            prev.map(m =>
+            [...prev, newMember]
 
-                m.id === updated.id
-
-                    ? updated
-
-                    : m
-
-            )
+                .sort((a, b) => a.numero - b.numero)
 
         );
 
     }
 
 
-    async function deleteMember(id:number){
+    async function updateMember(member: Member) {
+
+        const updated = await updateMemberApi(member);
+
+        setMembers(prev =>
+
+            prev
+                .map(m =>
+
+                    m.id === updated.id
+
+                        ? updated
+
+                        : m
+
+                )
+                .sort((a, b) => a.numero - b.numero)
+
+        );
+
+    }
+
+
+    async function deleteMember(id: number) {
 
         await deleteMemberApi(id);
 
@@ -78,7 +86,7 @@ export function useMembers(){
     }
 
 
-    return{
+    return {
 
         members,
 

@@ -1,11 +1,12 @@
 const membersRepository = require("../repositories/members.repository");
 
 
-function getAllMembers(){
+function getAllMembers() {
 
     return membersRepository.getAllMembers();
 
 }
+
 
 function createMember(member) {
 
@@ -21,9 +22,21 @@ function createMember(member) {
         throw new Error("El instrumento es obligatorio");
     }
 
+    if (
+        member.numero === undefined ||
+        member.numero === null ||
+        !Number.isInteger(Number(member.numero)) ||
+        Number(member.numero) <= 0
+    ) {
+        throw new Error("El número debe ser un entero mayor que 0");
+    }
+
+    member.numero = Number(member.numero);
+
     return membersRepository.createMember(member);
 
 }
+
 
 function updateMember(id, member) {
 
@@ -39,13 +52,28 @@ function updateMember(id, member) {
         throw new Error("El instrumento es obligatorio");
     }
 
+    if (
+        member.numero === undefined ||
+        member.numero === null ||
+        !Number.isInteger(Number(member.numero)) ||
+        Number(member.numero) <= 0
+    ) {
+        throw new Error("El número debe ser un entero mayor que 0");
+    }
+
+    member.numero = Number(member.numero);
+
     return membersRepository.updateMember(id, member);
 
 }
 
-function deleteMember(id){
+
+function deleteMember(id) {
+
     return membersRepository.deleteMember(id);
+
 }
+
 
 module.exports = {
     getAllMembers,

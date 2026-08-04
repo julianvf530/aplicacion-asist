@@ -40,16 +40,42 @@ export default function MemberCard({
 
             <div>
 
-                <h2
+                <div
                     className="
-                        text-xl
-                        font-bold
+                        flex
+                        items-center
+                        gap-3
+                        mb-1
                     "
                 >
 
-                    {member.nombre}
+                    <span
+                        className="
+                            bg-blue-600
+                            text-white
+                            rounded-full
+                            w-8
+                            h-8
+                            flex
+                            items-center
+                            justify-center
+                            font-bold
+                            text-sm
+                        "
+                    >
+                        {member.numero}
+                    </span>
 
-                </h2>
+                    <h2
+                        className="
+                            text-xl
+                            font-bold
+                        "
+                    >
+                        {member.nombre}
+                    </h2>
+
+                </div>
 
 
                 <p className="text-gray-600">

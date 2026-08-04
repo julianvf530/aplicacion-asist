@@ -2,7 +2,8 @@ CREATE TABLE IF NOT EXISTS members (
     id INTEGER PRIMARY KEY AUTOINCREMENT, 
     nombre TEXT NOT NULL,
     categoria TEXT NOT NULL,
-    instrumento TEXT NOT NULL
+    instrumento TEXT NOT NULL,
+    numero INTEGER NOT NULL UNIQUE
 );
 
 CREATE TABLE IF NOT EXISTS ensayos(

@@ -4,5 +4,6 @@ export type Member= {
     nombre: string ;
     categoria: string ;
     instrumento: string ;
+    numero:number;
 
 };

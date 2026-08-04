@@ -18,7 +18,13 @@ export default function MemberForm({
     onCancel
 }: MemberFormProps) {
 
-    const [nombre, setNombre] = useState(member?.nombre ?? "");
+    const [numero, setNumero] = useState(
+        member?.numero?.toString() ?? ""
+    );
+
+    const [nombre, setNombre] = useState(
+        member?.nombre ?? ""
+    );
 
     const [categoria, setCategoria] = useState(
         member?.categoria ?? ""
@@ -27,6 +33,8 @@ export default function MemberForm({
     const [instrumento, setInstrumento] = useState(
         member?.instrumento ?? ""
     );
+
+    const [numeroError, setNumeroError] = useState("");
 
     const [nombreError, setNombreError] = useState("");
 
@@ -38,9 +46,22 @@ export default function MemberForm({
 
         let valid = true;
 
+        setNumeroError("");
         setNombreError("");
         setCategoriaError("");
         setInstrumentoError("");
+
+        if (
+            numero.trim() === "" ||
+            Number(numero) <= 0 ||
+            !Number.isInteger(Number(numero))
+        ) {
+
+            setNumeroError("Introduce un número válido");
+
+            valid = false;
+
+        }
 
         if (nombre.trim() === "") {
 
@@ -75,6 +96,8 @@ export default function MemberForm({
             id: member
                 ? member.id
                 : Date.now(),
+
+            numero: Number(numero),
 
             nombre,
 
@@ -131,6 +154,39 @@ export default function MemberForm({
                             mb-2
                         "
                     >
+                        Número
+                    </label>
+
+                    <Input
+                        type="number"
+                        min="1"
+                        placeholder="Número de orden"
+                        value={numero}
+                        onChange={(e) =>
+                            setNumero(e.target.value)
+                        }
+                    />
+
+                    {numeroError && (
+
+                        <p className="text-red-500 text-sm mt-1">
+                            {numeroError}
+                        </p>
+
+                    )}
+
+                </div>
+
+                <div>
+
+                    <label
+                        className="
+                            block
+                            text-sm
+                            font-medium
+                            mb-2
+                        "
+                    >
                         Nombre
                     </label>
 
@@ -142,6 +198,7 @@ export default function MemberForm({
                             setNombre(e.target.value)
                         }
                     />
+
                     {nombreError && (
 
                         <p className="text-red-500 text-sm mt-1">
@@ -195,6 +252,7 @@ export default function MemberForm({
                         <option value="E">E</option>
 
                     </select>
+
                     {categoriaError && (
 
                         <p className="text-red-500 text-sm mt-1">
@@ -240,57 +298,19 @@ export default function MemberForm({
                             Selecciona un instrumento
                         </option>
 
-                        <option value="Clarinete">
-                            Clarinete
-                        </option>
-
-                        <option value="Flauta">
-                            Flauta
-                        </option>
-
-                        <option value="Oboe">
-                            Oboe
-                        </option>
-
-                        <option value="Fagot">
-                            Fagot
-                        </option>
-
-                        <option value="Saxo Alto">
-                            Saxo Alto
-                        </option>
-
-                        <option value="Saxo Tenor">
-                            Saxo Tenor
-                        </option>
-
-                        <option value="Saxo Barítono">
-                            Saxo Barítono
-                        </option>
-
-                        <option value="Trompeta">
-                            Trompeta
-                        </option>
-
-                        <option value="Trompa">
-                            Trompa
-                        </option>
-
-                        <option value="Trombón">
-                            Trombón
-                        </option>
-
-                        <option value="Bombardino">
-                            Bombardino
-                        </option>
-
-                        <option value="Tuba">
-                            Tuba
-                        </option>
-
-                        <option value="Percusión">
-                            Percusión
-                        </option>
+                        <option value="Clarinete">Clarinete</option>
+                        <option value="Flauta">Flauta</option>
+                        <option value="Oboe">Oboe</option>
+                        <option value="Fagot">Fagot</option>
+                        <option value="Saxo Alto">Saxo Alto</option>
+                        <option value="Saxo Tenor">Saxo Tenor</option>
+                        <option value="Saxo Barítono">Saxo Barítono</option>
+                        <option value="Trompeta">Trompeta</option>
+                        <option value="Trompa">Trompa</option>
+                        <option value="Trombón">Trombón</option>
+                        <option value="Bombardino">Bombardino</option>
+                        <option value="Tuba">Tuba</option>
+                        <option value="Percusión">Percusión</option>
 
                     </select>
 
