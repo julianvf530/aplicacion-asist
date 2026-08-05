@@ -31,3 +31,19 @@ export async function deleteEnsayo(id: number) {
     await api.delete(`/ensayos/${id}`);
 
 }
+
+export async function exportEnsayo(id: number) {
+
+    const response = await api.get(
+
+        `/export/${id}`,
+
+        {
+            responseType: "blob"
+        }
+
+    );
+
+    return response.data;
+
+}

@@ -1,27 +1,45 @@
 import { useEffect, useState } from "react";
 
-import {
-    getStatistics
-} from "../api/statisticsApi";
+import type { AttendanceStatistics } from "../types/Statistics";
 
-import type {
-    Statistics
+import {
+    getAttendanceStatistics,
+    getMonthlyWarnings
 } from "../api/statisticsApi";
 
 
 export function useStatistics() {
 
-    const [statistics, setStatistics] =
-        useState<Statistics | null>(null);
+
+    const [
+        attendance,
+        setAttendance
+    ] = useState<AttendanceStatistics[]>([]);
+
+
+    const [
+        warnings,
+        setWarnings
+    ] = useState<AttendanceStatistics[]>([]);
+
 
 
     async function loadStatistics() {
 
-        const data = await getStatistics();
+        const attendanceData =
+            await getAttendanceStatistics();
 
-        setStatistics(data);
+
+        const warningsData =
+            await getMonthlyWarnings();
+
+
+        setAttendance(attendanceData);
+
+        setWarnings(warningsData);
 
     }
+
 
 
     useEffect(() => {
@@ -31,9 +49,15 @@ export function useStatistics() {
     }, []);
 
 
+
     return {
-        statistics,
+
+        attendance,
+
+        warnings,
+
         loadStatistics
+
     };
 
 }

@@ -27,7 +27,8 @@ export default function AttendanceFilters({
         "3",
         "4",
         "R",
-        "E"
+        "E",
+        "T"
     ];
 
 

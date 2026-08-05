@@ -3,7 +3,8 @@ CREATE TABLE IF NOT EXISTS members (
     nombre TEXT NOT NULL,
     categoria TEXT NOT NULL,
     instrumento TEXT NOT NULL,
-    numero INTEGER NOT NULL UNIQUE
+    numero INTEGER NOT NULL UNIQUE,
+    activo INTEGER NOT NULL DEFAULT 1
 );
 
 CREATE TABLE IF NOT EXISTS ensayos(

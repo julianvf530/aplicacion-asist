@@ -62,8 +62,27 @@ function createEnsayo(ensayo) {
             VALUES (?, ?, ?)
         `);
 
-        // Insertar todas las asistencias
+        const activeMembers = db.prepare(`
+            SELECT id
+            FROM members
+            WHERE activo = 1
+        `).all();
+
+
+        const activeIds = new Set(
+            activeMembers.map(
+                (member) => member.id
+            )
+        );
+
+
+        // Insertar solo miembros activos
         ensayo.asistencia.forEach((attendance) => {
+
+            if (!activeIds.has(attendance.memberId)) {
+                return;
+            }
+
 
             insertAttendance.run(
                 ensayoId,

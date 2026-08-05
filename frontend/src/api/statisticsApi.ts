@@ -1,38 +1,23 @@
 import api from "./api";
 
-export type Statistics = {
 
-    ensayosRealizados: number;
+export async function getAttendanceStatistics() {
 
-    totalAsistencias: number;
+    const response = await api.get(
+        "/statistics/attendance"
+    );
 
-    totalAusencias: number;
+    return response.data;
 
-    porcentajeAsistencia: number;
-
-    mejorAsistencia: {
-
-        nombre: string;
-
-        total: number;
-
-    } | null;
-
-    masAusencias: {
-
-        nombre: string;
-
-        total: number;
-
-    } | null;
-
-};
+}
 
 
-export async function getStatistics(): Promise<Statistics> {
 
-    const response =
-        await api.get("/statistics");
+export async function getMonthlyWarnings() {
+
+    const response = await api.get(
+        "/statistics/warnings"
+    );
 
     return response.data;
 

@@ -4,6 +4,8 @@ const cors = require("cors");
 const membersRouter = require("./routes/members.routes");
 const ensayosRoutes = require("./routes/ensayos.routes");
 const statisticsRoutes = require("./routes/statistics.routes");
+const exportRoutes = require("./routes/export.routes");
+const importRoutes = require("./routes/import.routes");
 
 const errorHandler = require("./middlewares/error.middleware");
 
@@ -16,8 +18,9 @@ app.use(express.json());
 
 app.use("/api/members", membersRouter);
 app.use("/api/ensayos", ensayosRoutes);
-
 app.use("/api/statistics", statisticsRoutes);
+app.use("/api/export", exportRoutes);
+app.use("/api/import", importRoutes);
 
 app.get("/", (req, res) => {
     res.json({
@@ -25,7 +28,7 @@ app.get("/", (req, res) => {
     });
 });
 
-// 👇 SIEMPRE después de las rutas
+
 app.use(errorHandler);
 
 app.listen(3000, () => {

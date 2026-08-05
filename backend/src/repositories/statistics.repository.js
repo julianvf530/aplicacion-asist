@@ -1,96 +1,142 @@
 const db = require("../database/db");
 
 
-function getStatistics() {
+function getAttendanceStatistics() {
 
-    const ensayosRealizados = db.prepare(`
-        SELECT COUNT(*) AS total
-        FROM ensayos
-    `).get();
-
-
-    const totalAsistencias = db.prepare(`
-        SELECT COUNT(*) AS total
-        FROM asistencia
-        WHERE presente = 1
-    `).get();
-
-
-    const totalAusencias = db.prepare(`
-        SELECT COUNT(*) AS total
-        FROM asistencia
-        WHERE presente = 0
-    `).get();
-
-
-    const mejorAsistencia = db.prepare(`
+    const statistics = db.prepare(`
         SELECT
-            m.nombre,
-            COUNT(*) AS total
-        FROM asistencia a
-        JOIN members m
-            ON a.member_id = m.id
-        WHERE a.presente = 1
-        GROUP BY m.id
-        ORDER BY total DESC
-        LIMIT 1
-    `).get();
+
+            members.id,
+            members.numero,
+            members.nombre,
+            members.categoria,
+
+            COUNT(asistencia.member_id) AS total,
+
+            COALESCE(
+                SUM(asistencia.presente),
+                0
+            ) AS presentes
+
+        FROM members
+
+        LEFT JOIN asistencia
+            ON members.id = asistencia.member_id
+
+        WHERE members.activo = 1
+
+        GROUP BY members.id
+
+        ORDER BY members.numero
+
+    `).all();
 
 
-    const masAusencias = db.prepare(`
-        SELECT
-            m.nombre,
-            COUNT(*) AS total
-        FROM asistencia a
-        JOIN members m
-            ON a.member_id = m.id
-        WHERE a.presente = 0
-        GROUP BY m.id
-        ORDER BY total DESC
-        LIMIT 1
-    `).get();
+    return statistics.map((member) => ({
 
+        id: member.id,
 
-    const porcentajeAsistencia =
+        numero: member.numero,
 
-        (totalAsistencias.total + totalAusencias.total) === 0
+        nombre: member.nombre,
 
-            ? 0
+        categoria: member.categoria,
 
-            : Number(
+        total: member.total,
 
-                (
-                    totalAsistencias.total * 100 /
+        presentes: member.presentes,
 
-                    (
-                        totalAsistencias.total +
-                        totalAusencias.total
-                    )
+        porcentaje:
+            member.total === 0
+                ? 0
+                :
+                Math.round(
+                    (member.presentes / member.total) * 100
+                )
 
-                ).toFixed(1)
-
-            );
-
-
-    return {
-
-        ensayosRealizados: ensayosRealizados.total,
-
-        totalAsistencias: totalAsistencias.total,
-
-        totalAusencias: totalAusencias.total,
-
-        porcentajeAsistencia,
-
-        mejorAsistencia: mejorAsistencia ?? null,
-
-        masAusencias: masAusencias ?? null
-
-    };
+    }));
 
 }
 
 
+
+function getMonthlyWarnings() {
+
+    const statistics = db.prepare(`
+        SELECT
+
+            members.id,
+            members.numero,
+            members.nombre,
+            members.categoria,
+
+            COUNT(asistencia.member_id) AS total,
+
+            COALESCE(
+                SUM(asistencia.presente),
+                0
+            ) AS presentes
+
+        FROM members
+
+        LEFT JOIN asistencia
+
+            ON members.id = asistencia.member_id
+
+        LEFT JOIN ensayos
+
+            ON asistencia.ensayo_id = ensayos.id
+
+
+        WHERE members.activo = 1
+
+        AND ensayos.fecha >= date('now','-1 month')
+
+
+        GROUP BY members.id
+
+    `).all();
+
+
+    return statistics
+
+        .map((member) => ({
+
+            id: member.id,
+
+            numero: member.numero,
+
+            nombre: member.nombre,
+
+            categoria: member.categoria,
+
+            total: member.total,
+
+            presentes: member.presentes,
+
+            porcentaje:
+                member.total === 0
+                    ? 0
+                    :
+                    Math.round(
+                        (member.presentes / member.total) * 100
+                    )
+
+        }))
+
+        .filter(
+            (member) =>
+                member.porcentaje < 80
+        );
+
+}
+
+
+
 module.exports = {
-    getStatistics
+
+    getAttendanceStatistics,
+
+    getMonthlyWarnings
+
 };

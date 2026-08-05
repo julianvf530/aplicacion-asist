@@ -19,3 +19,24 @@ export async function updateMember(member: Member) {
 export async function deleteMember(id: number) {
     await api.delete(`/members/${id}`);
 }
+
+
+export async function importMembers(file: File) {
+
+    const formData = new FormData();
+
+    formData.append("file", file);
+
+    const response = await api.post(
+        "/import/members",
+        formData,
+        {
+            headers: {
+                "Content-Type": "multipart/form-data"
+            }
+        }
+    );
+
+    return response.data;
+
+}

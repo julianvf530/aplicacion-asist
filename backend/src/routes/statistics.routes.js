@@ -7,8 +7,14 @@ const statisticsController =
 
 
 router.get(
-    "/",
-    statisticsController.getStatistics
+    "/attendance",
+    statisticsController.getAttendanceStatistics
+);
+
+
+router.get(
+    "/warnings",
+    statisticsController.getMonthlyWarnings
 );
 
 

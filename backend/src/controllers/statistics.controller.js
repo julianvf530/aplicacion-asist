@@ -2,17 +2,30 @@ const statisticsService =
     require("../services/statistics.services");
 
 
-function getStatistics(req, res) {
+function getAttendanceStatistics(req, res) {
 
     const statistics =
-        statisticsService.getStatistics();
-
+        statisticsService.getAttendanceStatistics();
 
     res.json(statistics);
 
 }
 
 
+function getMonthlyWarnings(req, res) {
+
+    const warnings =
+        statisticsService.getMonthlyWarnings();
+
+    res.json(warnings);
+
+}
+
+
 module.exports = {
-    getStatistics
+
+    getAttendanceStatistics,
+
+    getMonthlyWarnings
+
 };

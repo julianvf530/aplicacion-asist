@@ -114,9 +114,7 @@ export default function MemberCard({
                     variant="danger"
                     onClick={onDelete}
                 >
-
-                    Eliminar
-
+                    Dar de baja
                 </Button>
 
 

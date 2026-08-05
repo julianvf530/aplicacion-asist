@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 
 import { useMembers } from "../../hooks/useMembers";
 import { useToast } from "../../hooks/useToast";
@@ -10,34 +10,31 @@ import PageContainer from "../../components/ui/PageContainer";
 import Input from "../../components/ui/Input";
 import Button from "../../components/ui/Button";
 
-
 import type { ChangeEvent } from "react";
 import type { Member } from "../../types/Member";
 
+export default function Members() {
 
-export default function Members(){
+    const [text, setText] = useState("");
 
-
-    const [text,setText] = useState("");
-    
-    const [editingMember,setEditingMember] =
+    const [editingMember, setEditingMember] =
         useState<Member | null>(null);
 
-
-    const [showForm,setShowForm] =
+    const [showForm, setShowForm] =
         useState(false);
 
+    const fileInputRef =
+        useRef<HTMLInputElement>(null);
 
     const {
         members,
         addMember,
         updateMember,
-        deleteMember
-
+        deleteMember,
+        importMembers
     } = useMembers();
 
     const { showToast } = useToast();
-
 
     const manejo = (
         event: ChangeEvent<HTMLInputElement>
@@ -47,8 +44,6 @@ export default function Members(){
 
     };
 
-
-
     const filteredMembers = members.filter((member) =>
 
         member.nombre
@@ -57,64 +52,78 @@ export default function Members(){
 
     );
 
-
-
-    const handleEdit = (member:Member) => {
+    const handleEdit = (member: Member) => {
 
         setEditingMember(member);
 
     };
 
-
-
     const handleSave = async (member: Member) => {
 
-        const exists = members.some(
+        try {
 
-            (m) => m.id === member.id
+            const exists = members.some(
 
-        );
+                (m) => m.id === member.id
 
-        if (exists) {
-
-            await updateMember(member);
-
-            showToast(
-                "Miembro actualizado correctamente",
-                "success"
             );
 
-        } else {
+            if (exists) {
 
-            await addMember({
+                await updateMember(member);
 
-                nombre: member.nombre,
+                showToast(
+                    "Miembro actualizado correctamente",
+                    "success"
+                );
 
-                categoria: member.categoria,
+            } else {
 
-                instrumento: member.instrumento
+                await addMember({
 
-            });
+                    numero: member.numero,
+
+                    nombre: member.nombre,
+
+                    categoria: member.categoria,
+
+                    instrumento: member.instrumento
+
+                });
+
+                showToast(
+                    "Miembro añadido correctamente",
+                    "success"
+                );
+
+            }
+
+            setEditingMember(null);
+
+            setShowForm(false);
+
+        } catch (error: any) {
 
             showToast(
-                "Miembro añadido correctamente",
-                "success"
+
+                error.response?.data?.message ??
+
+                error.message ??
+
+                "Ha ocurrido un error",
+
+                "error"
+
             );
 
         }
 
-        setEditingMember(null);
-
-        setShowForm(false);
-
     };
 
+    const handleDelete = async (member: Member) => {
 
-
-   const handleDelete = async (member: Member) => 
-    {
         const confirmed = window.confirm(
-            `¿Seguro que quieres eliminar a "${member.nombre}"?`
+            `¿Seguro que quieres dar de baja a "${member.nombre}"?\n\nSeguirá apareciendo en el historial de asistencias.`
         );
 
         if (!confirmed) {
@@ -124,18 +133,63 @@ export default function Members(){
         await deleteMember(member.id);
 
         showToast(
-            "Miembro eliminado correctamente",
+            "Miembro dado de baja correctamente",
             "success"
         );
 
     };
 
+    const handleImport = async (
 
+        event: React.ChangeEvent<HTMLInputElement>
+
+    ) => {
+
+        const file = event.target.files?.[0];
+
+        if (!file) {
+            return;
+        }
+
+        try {
+
+            await importMembers(file);
+
+            showToast(
+                "Miembros importados correctamente",
+                "success"
+            );
+
+            event.target.value = "";
+
+        } catch {
+
+            showToast(
+                "Error al importar el Excel",
+                "error"
+            );
+
+        }
+
+    };
 
     return (
 
         <PageContainer>
 
+            <input
+
+                ref={fileInputRef}
+
+                type="file"
+
+                accept=".xlsx,.xls"
+
+                hidden
+
+                onChange={handleImport}
+
+            />
 
             <div
                 className="
@@ -155,21 +209,40 @@ export default function Members(){
                     Miembros
                 </h1>
 
-
-                <Button
-
-                    onClick={() => setShowForm(true)}
-
+                <div
+                    className="
+                        flex
+                        gap-3
+                    "
                 >
 
-                    Añadir miembro
+                    <Button
 
-                </Button>
+                        variant="secondary"
 
+                        onClick={() =>
+                            fileInputRef.current?.click()
+                        }
+
+                    >
+
+                        Importar Excel
+
+                    </Button>
+
+                    <Button
+                        onClick={() =>
+                            setShowForm(true)
+                        }
+                    >
+
+                        Añadir miembro
+
+                    </Button>
+
+                </div>
 
             </div>
-
-
 
             <div className="mb-6">
 
@@ -187,9 +260,8 @@ export default function Members(){
 
             </div>
 
-
-
             {
+
                 showForm && (
 
                     <div className="mb-6">
@@ -198,17 +270,20 @@ export default function Members(){
 
                             onSave={handleSave}
 
-                            onCancel={() => setShowForm(false)}
+                            onCancel={() =>
+                                setShowForm(false)
+                            }
+
                         />
 
                     </div>
 
                 )
+
             }
 
-
-
             {
+
                 editingMember && (
 
                     <div className="mb-6">
@@ -219,22 +294,23 @@ export default function Members(){
 
                             onSave={handleSave}
 
-                            onCancel={() => setEditingMember(null)}
+                            onCancel={() =>
+                                setEditingMember(null)
+                            }
 
                         />
 
                     </div>
 
                 )
+
             }
-
-
 
             <div>
 
-
                 {
-                    filteredMembers.map((member)=>(
+
+                    filteredMembers.map((member) => (
 
                         <MemberCard
 
@@ -242,19 +318,21 @@ export default function Members(){
 
                             member={member}
 
-                            onEdit={() => handleEdit(member)}
+                            onEdit={() =>
+                                handleEdit(member)
+                            }
 
-                            onDelete={() => handleDelete(member)}
+                            onDelete={() =>
+                                handleDelete(member)
+                            }
 
                         />
 
                     ))
+
                 }
 
-
             </div>
-
-
 
         </PageContainer>
 

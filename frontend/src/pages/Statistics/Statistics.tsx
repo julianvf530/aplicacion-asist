@@ -3,39 +3,21 @@ import { useStatistics } from "../../hooks/useStatistics";
 import PageContainer from "../../components/ui/PageContainer";
 import Card from "../../components/ui/Card";
 
+
 export default function Statistics() {
 
-    const { statistics } = useStatistics();
 
+    const {
+        attendance,
+        warnings
+    } = useStatistics();
 
-    if (!statistics) {
-
-        return (
-
-            <PageContainer>
-
-                <h1
-                    className="
-                        text-3xl
-                        font-bold
-                        mb-6
-                    "
-                >
-                    Estadísticas
-                </h1>
-
-                <p>Cargando estadísticas...</p>
-
-            </PageContainer>
-
-        );
-
-    }
 
 
     return (
 
         <PageContainer>
+
 
             <h1
                 className="
@@ -47,172 +29,247 @@ export default function Statistics() {
                 Estadísticas
             </h1>
 
+            <Card>
 
-            <div
+                <h2
+                    className="
+                        text-2xl
+                        font-bold
+                        mb-5
+                    "
+                >
+                    ⚠️ Menos del 80% el último mes
+                </h2>
+
+
+
+                {
+                    warnings.length === 0 ? (
+
+                        <p>
+                            No hay miembros con baja asistencia.
+                        </p>
+
+                    ) : (
+
+
+                        <div
+                            className="
+                                overflow-x-auto
+                            "
+                        >
+
+                            <table
+                                className="
+                                    w-full
+                                    text-left
+                                "
+                            >
+
+                                <thead>
+
+                                    <tr
+                                        className="
+                                            border-b
+                                        "
+                                    >
+
+                                        <th>
+                                            Nº
+                                        </th>
+
+                                        <th>
+                                            Nombre
+                                        </th>
+
+                                        <th>
+                                            Categoría
+                                        </th>
+
+                                        <th>
+                                            Asistencia
+                                        </th>
+
+                                    </tr>
+
+                                </thead>
+
+
+
+                                <tbody>
+
+                                    {
+                                        warnings.map((member)=>(
+
+                                            <tr
+                                                key={member.id}
+                                                className="
+                                                    border-b
+                                                "
+                                            >
+
+                                                <td>
+                                                    {member.numero}
+                                                </td>
+
+
+                                                <td>
+                                                    {member.nombre}
+                                                </td>
+
+
+                                                <td>
+                                                    {member.categoria}
+                                                </td>
+
+
+                                                <td
+                                                    className="
+                                                        text-red-600
+                                                        font-bold
+                                                    "
+                                                >
+                                                    {member.porcentaje}%
+                                                </td>
+
+
+                                            </tr>
+
+                                        ))
+                                    }
+
+
+                                </tbody>
+
+
+                            </table>
+
+
+                        </div>
+
+                    )
+
+                }
+
+
+            </Card>
+            
+             <Card
                 className="
-                    grid
-                    grid-cols-1
-                    md:grid-cols-2
-                    xl:grid-cols-3
-                    gap-6
+                    mb-8
                 "
             >
 
-                <Card>
-
-                    <p className="text-gray-500">
-                        📅 Ensayos realizados
-                    </p>
-
-                    <p className="text-4xl font-bold mt-2">
-                        {statistics.ensayosRealizados}
-                    </p>
-
-                </Card>
+                <h2
+                    className="
+                        text-2xl
+                        font-bold
+                        mb-5
+                    "
+                >
+                    📊 Porcentaje de asistencia
+                </h2>
 
 
-                <Card>
 
-                    <p className="text-gray-500">
-                        ✅ Asistencias
-                    </p>
+                <div
+                    className="
+                        overflow-x-auto
+                    "
+                >
 
-                    <p
+                    <table
                         className="
-                            text-4xl
-                            font-bold
-                            text-green-600
-                            mt-2
+                            w-full
+                            text-left
                         "
                     >
-                        {statistics.totalAsistencias}
-                    </p>
 
-                </Card>
+                        <thead>
 
+                            <tr
+                                className="
+                                    border-b
+                                "
+                            >
 
-                <Card>
+                                <th>
+                                    Nº
+                                </th>
 
-                    <p className="text-gray-500">
-                        ❌ Ausencias
-                    </p>
+                                <th>
+                                    Nombre
+                                </th>
 
-                    <p
-                        className="
-                            text-4xl
-                            font-bold
-                            text-red-600
-                            mt-2
-                        "
-                    >
-                        {statistics.totalAusencias}
-                    </p>
+                                <th>
+                                    Categoría
+                                </th>
 
-                </Card>
+                                <th>
+                                    Asistencia
+                                </th>
 
+                            </tr>
 
-                <Card>
-
-                    <p className="text-gray-500">
-                        📊 Asistencia media
-                    </p>
-
-                    <p
-                        className="
-                            text-4xl
-                            font-bold
-                            text-blue-600
-                            mt-2
-                        "
-                    >
-                        {statistics.porcentajeAsistencia}%
-                    </p>
-
-                </Card>
+                        </thead>
 
 
-                <Card>
 
-                    <p className="text-gray-500">
-                        🥇 Más asistencias
-                    </p>
+                        <tbody>
 
-                    {
+                            {
+                                attendance.map((member)=>(
 
-                        statistics.mejorAsistencia ? (
+                                    <tr
+                                        key={member.id}
+                                        className="
+                                            border-b
+                                        "
+                                    >
 
-                            <>
-
-                                <p
-                                    className="
-                                        text-xl
-                                        font-bold
-                                        mt-2
-                                    "
-                                >
-                                    {statistics.mejorAsistencia.nombre}
-                                </p>
-
-                                <p className="text-gray-600">
-                                    {statistics.mejorAsistencia.total} asistencias
-                                </p>
-
-                            </>
-
-                        ) : (
-
-                            <p className="mt-2">
-                                Sin datos
-                            </p>
-
-                        )
-
-                    }
-
-                </Card>
+                                        <td>
+                                            {member.numero}
+                                        </td>
 
 
-                <Card>
+                                        <td>
+                                            {member.nombre}
+                                        </td>
 
-                    <p className="text-gray-500">
-                        🚫 Más ausencias
-                    </p>
 
-                    {
+                                        <td>
+                                            {member.categoria}
+                                        </td>
 
-                        statistics.masAusencias ? (
 
-                            <>
+                                        <td
+                                            className="
+                                                font-bold
+                                            "
+                                        >
+                                            {member.porcentaje}%
+                                        </td>
 
-                                <p
-                                    className="
-                                        text-xl
-                                        font-bold
-                                        mt-2
-                                    "
-                                >
-                                    {statistics.masAusencias.nombre}
-                                </p>
 
-                                <p className="text-gray-600">
-                                    {statistics.masAusencias.total} ausencias
-                                </p>
+                                    </tr>
 
-                            </>
+                                ))
+                            }
 
-                        ) : (
 
-                            <p className="mt-2">
-                                Sin datos
-                            </p>
+                        </tbody>
 
-                        )
 
-                    }
+                    </table>
 
-                </Card>
 
-            </div>
+                </div>
+
+
+            </Card>
+
+
+
 
         </PageContainer>
 

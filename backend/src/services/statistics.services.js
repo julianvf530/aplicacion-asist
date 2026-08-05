@@ -2,13 +2,24 @@ const statisticsRepository =
     require("../repositories/statistics.repository");
 
 
-function getStatistics() {
+function getAttendanceStatistics() {
 
-    return statisticsRepository.getStatistics();
+    return statisticsRepository.getAttendanceStatistics();
+
+}
+
+
+function getMonthlyWarnings() {
+
+    return statisticsRepository.getMonthlyWarnings();
 
 }
 
 
 module.exports = {
-    getStatistics
+
+    getAttendanceStatistics,
+
+    getMonthlyWarnings
+
 };

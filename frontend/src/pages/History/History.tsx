@@ -9,7 +9,8 @@ export default function History() {
 
     const {
         ensayos,
-        deleteEnsayo
+        deleteEnsayo,
+        exportEnsayo
     } = useEnsayos();
 
     const { showToast } = useToast();
@@ -38,6 +39,29 @@ export default function History() {
 
             showToast(
                 "Error al eliminar el ensayo",
+                "error"
+            );
+
+        }
+
+    };
+
+
+    const handleExport = async (id: number) => {
+
+        try {
+
+            await exportEnsayo(id);
+
+            showToast(
+                "Excel exportado correctamente",
+                "success"
+            );
+
+        } catch {
+
+            showToast(
+                "Error al exportar el Excel",
                 "error"
             );
 
@@ -87,6 +111,8 @@ export default function History() {
                                     ensayo={ensayo}
 
                                     onDelete={handleDelete}
+
+                                    onExport={handleExport}
 
                                 />
 

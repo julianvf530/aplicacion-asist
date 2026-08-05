@@ -6,9 +6,9 @@ import {
     getMembers,
     createMember,
     updateMember as updateMemberApi,
-    deleteMember as deleteMemberApi
+    deleteMember as deleteMemberApi,
+    importMembers as importMembersApi
 } from "../api/membersApi";
-
 
 export function useMembers() {
 
@@ -86,6 +86,15 @@ export function useMembers() {
     }
 
 
+    async function importMembers(file: File) {
+
+    await importMembersApi(file);
+
+    await loadMembers();
+
+    }
+
+
     return {
 
         members,
@@ -96,7 +105,9 @@ export function useMembers() {
 
         deleteMember,
 
-        loadMembers
+        loadMembers,
+        
+        importMembers
 
     };
 

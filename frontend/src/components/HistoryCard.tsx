@@ -2,7 +2,7 @@ import type { Ensayo } from "../types/Ensayo";
 import type { AttendanceMember } from "../types/AttendanceMember";
 
 import { useState } from "react";
-
+import { formatDate } from "../utils/formatDate";
 import { useMembers } from "../hooks/useMembers";
 
 import Card from "./ui/Card";
@@ -13,7 +13,9 @@ type HistoryCardProps = {
 
     ensayo: Ensayo;
 
-    onDelete: (id:number)=>Promise<void>;
+    onDelete: (id: number) => Promise<void>;
+
+    onExport: (id: number) => Promise<void>;
 
 };
 
@@ -23,7 +25,9 @@ export default function HistoryCard({
 
     ensayo,
 
-    onDelete
+    onDelete,
+
+    onExport
 
 }: HistoryCardProps) {
 
@@ -93,7 +97,7 @@ export default function HistoryCard({
                         "
                     >
 
-                        {ensayo.fecha}
+                        {formatDate(ensayo.fecha)}
 
                     </h2>
 
@@ -106,7 +110,12 @@ export default function HistoryCard({
 
 
                 </div>
-
+                <Button
+                    variant="secondary"
+                    onClick={() => onExport(ensayo.id)}
+                >
+                    Exportar Excel
+                </Button>
 
                 <Button
 
