@@ -147,11 +147,19 @@ function importMembers(filePath) {
 
     });
 
-    const result = transaction();
+    try {
 
-    fs.unlinkSync(filePath);
+        const result = transaction();
 
-    return result;
+        return result;
+
+    } finally {
+
+        if (fs.existsSync(filePath)) {
+            fs.unlinkSync(filePath);
+        }
+
+    }
 
 }
 
