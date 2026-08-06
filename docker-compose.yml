@@ -7,5 +7,11 @@ services:
 
     ports:
       - "3000:3000"
+    
+    volumes:
+      - ./volumes/sqlite:/data
+    
+    environment:
+      DB_PATH: /data/database.sqlite
 
     restart: unless-stopped
