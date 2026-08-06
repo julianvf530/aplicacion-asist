@@ -1,0 +1,12 @@
+services:
+  backend:
+    build:
+      context:./backend
+
+    container_name: asistencia-backend
+
+    ports: 
+      -"3000-30000"
+
+    restart: unless-stopped
+    
