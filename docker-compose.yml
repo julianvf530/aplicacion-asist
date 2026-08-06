@@ -1,11 +1,11 @@
 services:
- backend:
-  build:
-   context:./backend
+  backend:
+    build:
+      context: ./backend
 
-   container_name: asistencia-backend
+    container_name: asistencia-backend
 
-  ports: 
-   -"3000-3000"
+    ports:
+      - "3000:3000"
 
-  restart: unless-stopped
+    restart: unless-stopped
