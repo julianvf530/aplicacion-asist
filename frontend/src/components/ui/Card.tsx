@@ -22,15 +22,14 @@ export default function Card({
     return (
 
         <div
-
             className={`
                 bg-white
                 rounded-xl
                 shadow-md
-                p-5
+                p-4
+                md:p-5
                 ${className}
             `}
-
         >
 
             {children}

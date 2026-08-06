@@ -194,8 +194,11 @@ export default function Members() {
             <div
                 className="
                     flex
-                    justify-between
-                    items-center
+                    flex-col
+                    md:flex-row
+                    md:justify-between
+                    md:items-center
+                    gap-4
                     mb-6
                 "
             >
