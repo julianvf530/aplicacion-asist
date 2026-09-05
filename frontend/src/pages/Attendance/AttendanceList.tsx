@@ -10,10 +10,9 @@ type AttendanceListProps = {
 
     attendanceMembers: AttendanceMember[];
 
-    onToggle:(memberId:number)=>void;
+    onToggle: (memberId: number) => void;
 
 };
-
 
 
 export default function AttendanceList({
@@ -24,13 +23,12 @@ export default function AttendanceList({
 
     onToggle
 
-}: AttendanceListProps){
+}: AttendanceListProps) {
 
 
     return (
 
         <div>
-
 
             <h2
                 className="
@@ -39,11 +37,8 @@ export default function AttendanceList({
                     mb-4
                 "
             >
-
                 Lista de miembros
-
             </h2>
-
 
 
             <div
@@ -55,41 +50,48 @@ export default function AttendanceList({
                 "
             >
 
+                {
+                    members.map((member) => {
 
-            {
-                members.map((member)=>{
+                        const attendance =
+                            attendanceMembers.find(
+                                item =>
+                                    Number(item.memberId) ===
+                                    Number(member.id)
+                            );
+
+                        /*
+                         * Por seguridad, si por cualquier motivo
+                         * todavía no existe la asistencia de este
+                         * miembro, lo consideramos presente.
+                         */
+                        const memberAttendance: AttendanceMember =
+                            attendance ?? {
+                                memberId: Number(member.id),
+                                presente: true
+                            };
 
 
-                    const attendance =
-                        attendanceMembers.find(
-                            item =>
-                            item.memberId === member.id
+                        return (
+
+                            <AttendanceMemberCard
+
+                                key={member.id}
+
+                                member={member}
+
+                                attendance={memberAttendance}
+
+                                onToggle={onToggle}
+
+                            />
+
                         );
 
-
-                    return (
-
-                        <AttendanceMemberCard
-
-                            key={member.id}
-
-                            member={member}
-
-                            attendance={attendance!}
-
-                            onToggle={onToggle}
-
-                        />
-
-                    );
-
-
-                })
-            }
-
+                    })
+                }
 
             </div>
-
 
         </div>
 

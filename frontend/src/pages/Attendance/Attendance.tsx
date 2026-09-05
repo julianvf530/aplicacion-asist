@@ -48,12 +48,12 @@ export default function Attendance() {
 
         const initialAttendance = members.map((member) => ({
 
-            memberId: member.id,
+            memberId: Number(member.id),
 
             presente: true
 
         }));
-
+        
         setAttendanceMembers(initialAttendance);
 
         setStarted(true);
